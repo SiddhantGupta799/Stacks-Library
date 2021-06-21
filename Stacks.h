@@ -17,11 +17,10 @@ constexpr bool _is_iterator_v_stack = false;
 template <class _Ty>
 constexpr bool _is_iterator_v_stack<_Ty, void_tt<_iter_cat_t<_Ty>>> = true;
 
-// this file will contain Implementation of Stacks
 #define init_name(x) x.name = #x
+
 namespace Py {
 	// This Stack will consist of a Binary Node and will be Implemented using Doubly Linked List
-
 	template<typename T>
 	struct DualNode {
 		DualNode<T>* prev;
@@ -30,14 +29,17 @@ namespace Py {
 	};
 
 	/*
-	Stack Will Contain methods like:
+	This Stack Implmenatation Contains Methods like:
 		- an initialiser_list<> based construction
-		- an iterator based initialization
-		- a pointer type initialization
-		- will be able to show it self
+		- an iterator based construction
+		- show
 		- push
 		- pop
 		- top
+		- clear
+		- dump
+		- min
+		- max
 
 	*/
 
@@ -50,6 +52,7 @@ namespace Py {
 		pointer _bottom_ = NULL;
 
 		int _size_ = 0;
+
 	public:
 		char const* name = "none";
 
@@ -119,7 +122,10 @@ namespace Py {
 			}
 		}
 
-		T top() { return this->_top_->data; }
+		T top() { 
+			if (this->_top_) return this->_top_->data;
+			else return T{};
+		}
 		int size() { return this->_size_; }
 
 	private:
@@ -253,9 +259,6 @@ namespace Py {
 				pointer temp = this->_top_;
 				// top shifts down
 				this->_top_ = this->_top_->prev;
-
-				// top's next is nulled
-				this->_top_->next = NULL;
 
 				// temp is deleted
 				val = temp->data;
