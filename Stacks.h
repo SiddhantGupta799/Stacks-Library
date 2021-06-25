@@ -2,31 +2,12 @@
 #define STACKS_H
 
 #include <iostream>
+#include "Nodes.h"
 using namespace std;
-
-// just a piece of code that determines if the passed parameter is an iterator
-template <class _iter>
-using _iter_cat_t = typename iterator_traits<_iter>::iterator_category;
-
-template <class... _Types>
-using void_tt = void;
-
-template <class _Ty, class = void>
-constexpr bool _is_iterator_v_stack = false;
-
-template <class _Ty>
-constexpr bool _is_iterator_v_stack<_Ty, void_tt<_iter_cat_t<_Ty>>> = true;
 
 #define init_name(x) x.name = #x
 
 namespace Py {
-	// This Stack will consist of a Binary Node and will be Implemented using Doubly Linked List
-	template<typename T>
-	struct DualNode {
-		DualNode<T>* prev;
-		T data;
-		DualNode<T>* next;
-	};
 
 	/*
 	This Stack Implmenatation Contains Methods like:
@@ -45,8 +26,8 @@ namespace Py {
 
 	template<typename T>
 	class Stack {
-		using pointer = DualNode<T>*;
-		using value = DualNode<T>;
+		using pointer = Py::BinaryNode<T>*;
+		using value = Py::BinaryNode<T>;
 
 		pointer _top_ = NULL;
 		pointer _bottom_ = NULL;
@@ -54,6 +35,8 @@ namespace Py {
 		int _size_ = 0;
 
 	public:
+		using iterator = _BinaryNode_Reverse_Iterator_<T>;
+
 		char const* name = "none";
 
 		Stack() = default;
@@ -90,7 +73,7 @@ namespace Py {
 		}
 
 		// supports iterators that have operator * and ++ overloaded
-		template<class _Iter, enable_if_t<_is_iterator_v_stack<_Iter>, int> = 0>
+		template<class _Iter>
 		Stack(_Iter begin, _Iter end) {
 			_Iter it = begin;
 			this->_bottom_ = new value{ NULL };
@@ -250,6 +233,14 @@ namespace Py {
 				obj.null_out();
 			}
 			return *this;
+		}
+
+		_BinaryNode_Reverse_Iterator_<T> begin() {
+			return _BinaryNode_Reverse_Iterator_<T>(this->_top_);
+		}
+
+		_BinaryNode_Reverse_Iterator_<T> end() {
+			return _BinaryNode_Reverse_Iterator_<T>(this->_bottom_->prev);
 		}
 
 		T pop() {
