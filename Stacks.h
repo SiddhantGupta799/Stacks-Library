@@ -1,9 +1,7 @@
 #ifndef STACKS_H
 #define STACKS_H
 
-#include <iostream>
 #include "Nodes.h"
-using namespace std;
 
 #define init_name(x) x.name = #x
 
